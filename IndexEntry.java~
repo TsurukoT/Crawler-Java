@@ -1,0 +1,116 @@
+import org.jsoup.nodes.*;
+import org.jsoup.*;
+import org.jsoup.select.*;
+import java.io.*;
+import java.util.*;
+public class IndexEntry implements Comparable<IndexEntry>{
+// Entries in the PageIndex: Represents a single term (word) found and
+// tracks the pages that have that word associated with them.
+// IndexEntries are created by specificying a term in the constructor
+// and then adding pages to the entry.  The class implements
+// Comparable so it can be stored in a set such as ArraySet.
+
+  protected String term;
+  // A search term which is found on some pages. Examples: "computer"
+  // "acrobat" or "electronica".  Terms are kept in lower case only.
+
+  protected ArraySet<String> pages;
+  // The set of pages which contain the given term
+
+  public IndexEntry(String term){
+    this.term = term.toLowerCase();
+    pages = new ArraySet<String>();
+  }
+  // Create an empty IndexEntry associated with the given term
+
+    public String getTerm(){
+      return this.term;
+    }
+  // Return a the term associated associated with this entry
+
+    public List<String> getPages(){
+      return this.pages.asList();
+    }
+  // Return a list of pages associated with this entry
+
+    public boolean containsPage(String pageFileName){
+      if (pages.contains(pageFileName)){
+        return true;
+      }
+      return false;
+    }
+  // Return true if the the given page is already present in this
+  // entry and false otherwise.
+
+    public boolean addPage(String filename){
+      if (containsPage(filename)){
+        return false;
+      }
+      else{
+        this.pages.add(filename);
+        
+        return true;
+      }
+    }
+  // Add the given page to this entry returning true if it was not
+  // present and is therefore a new addition; return false if it is
+  // already present
+
+    public int compareTo(IndexEntry that){
+      //used the compareTo method in the String class to return an integer. 
+      String thatterm = that.term;
+      return this.term.compareTo(thatterm);
+    }
+      
+  // Compare the entry to that entry. The comparison is based entirely
+  // on the term field which should use the built-in String comparison
+  // methods to generate the difference.
+
+    public boolean equals(Object other){
+      if(!(other instanceof IndexEntry)){
+        return false;
+      }
+      IndexEntry otherindexentry = (IndexEntry) other;
+      if(this.term.compareTo(otherindexentry.term) != 0){
+        return false;
+      }
+      return true;
+    }
+      
+      
+  // Return whether the other object is equal to this IndexEntry.
+  // This is only the case when other is also an IndexEntry and has an
+  // equal term field.
+
+    public String toString(){
+      String entrystr = "";
+      entrystr += "@ " + this.term;
+      entrystr += "\n";
+      for(String estr: this.pages.asList()){
+      entrystr += estr;
+      entrystr += "\n";
+    }
+    return entrystr;
+  }
+  // Return a string representation of this entry. The format of the string is
+  //
+  // @ term
+  // file1
+  // file2
+  // file3
+  // ...
+  //
+  // Example 1: 1 page associated with "bored"
+  // @ bored
+  // crawls/small-site/B.html
+  // 
+  // Example 2: 6 pages associated with "lisp"
+  // @ lisp
+  // ../crawls/cs.gmu.edu/~sean/lisp/LispTutorial.html
+  // ../crawls/cs.gmu.edu/~sean/lisp/cons.html
+  // ../crawls/cs.gmu.edu/~sean/lisp/index.html
+  // ../crawls/cs.gmu.edu/~sean/papers/index.html
+  // ../crawls/cs.gmu.edu/~sean/research.1.html
+  // ../crawls/cs.gmu.edu/~sean/research/lil-gp-patch/index.html
+
+}
